@@ -1,0 +1,105 @@
+openapi: 3.0.0
+info:
+  title: BizDays — производственный календарь
+  description: |-
+    Это API отвечает на запросы о рабочих и нерабочих днях в разных
+    странах и регионах.
+
+    Должно работать как минимум для трёх лет: прошлый, текущий и
+    будущий год.
+
+    Регион на данный момент поддерживается только один: Россия (код
+    `ru`).
+
+    Даты принимаются в формате RFC3339 (YYYY-MM-DD или YYYYMMDD), а
+    также в форматах DD.MM.YYYY и DD-MM-YYYY.
+  version: 1.0.0
+servers:
+  - url: http://ko85.intabs.net:28080/v1
+paths:
+  /regions/{регион}/days/{дата}:
+    get:
+      summary: Рабочий или нерабочий день
+      description: Отвечает строкой `false` или `true`.
+      parameters:
+        - name: регион
+          in: path
+          description: Код страны или региона
+          required: true
+          schema:
+            type: string
+            enum:
+              - ru
+        - name: дата
+          in: path
+          description: Конкретная дата
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: |-
+            Успешный ответ. Простой текст, строка `false` или `true`.
+          content:
+            text/plain:
+              schema:
+                type: boolean
+              example: "false"
+        '400':
+          description: |-
+            Если был указан неправильный регион или дата. В теле
+            ответа простой текст с сообщением об ошибке.
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: Couldn't parse "bullshit" as a date
+  /regions/{регион}/days/{дата}/offset/{n}:
+    get:
+      summary: Какая будет дата через `n` рабочих дней
+      description: |-
+        Число `n` может быть положительным (какая дата будет через `n`
+        рабочих дней) или отрицательным (какая дата была `n` рабочих
+        дней назад от указанной даты).
+      parameters:
+        - name: регион
+          in: path
+          description: Код страны или региона
+          required: true
+          schema:
+            type: string
+            enum:
+              - ru
+        - name: дата
+          in: path
+          description: Конкретная дата
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: n
+          in: path
+          description: Сколько рабочих дней отсчитать от указанной даты.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: |-
+            Успешный ответ. Простой текст, строка с датой, которая
+            наступит через И рабочих дней от заданной даты. Даты в
+            ответе всегда в формате RFC3339.
+          content:
+            text/plain:
+              schema:
+                type: string
+                format: date
+              example: 2024-08-29
+        '400':
+          description: Если был указан неправильный регион или дата. В теле ответа простой текст с сообщением об ошибке.
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: Unknown region "es"
