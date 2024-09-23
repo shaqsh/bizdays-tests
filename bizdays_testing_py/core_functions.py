@@ -14,9 +14,7 @@ def run_test(region, date, status_code, headers_set={'Accept': 'text/plain'}, re
 
         if headers_set == {'Accept': 'application/json'}:
 
-            print("\nIt's JSON")
-            print("Date: " + response.json()['date'])
-            print("Type: " + response.json()['type'])
+            print("\nIt's JSON" + "\nDate: " + response.json()['date'] + "\nType: " + response.json()['type'])
 
             assert response.json()['date'] == date
             assert response.json()['type'] == response_json_type
