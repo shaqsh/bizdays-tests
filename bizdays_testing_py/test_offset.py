@@ -38,3 +38,6 @@ def test_offset_incorrect_data():
 
 def test_offset_empty():
     run_test_offset("ru", "2024-09-23", 404, "")
+
+def test_offset_decimal():
+    run_test_offset("ru", "2024-09-23", 400, "0.5")

@@ -2,7 +2,8 @@ import requests
 
 baseurl = "http://ko85.intabs.net:28080/v1"
 
-def run_test_business(region, date, status_code, headers_set={'Accept': 'text/plain'}, response_plain=None, response_json_type=None):
+#добавить expect_json
+def run_test_business(region, date, status_code, headers_set=None, expect_json=False, response_plain=None, response_json_type=None):
 
     request_full = str(baseurl + "/regions/" + region + "/days/" + date)
     response = requests.get(request_full, headers=headers_set)
@@ -14,7 +15,7 @@ def run_test_business(region, date, status_code, headers_set={'Accept': 'text/pl
 
     if status_code == 200:
 
-        if headers_set == {'Accept': 'application/json'}:
+        if expect_json == True:
 
             print("\nIt's JSON" + "\nDate: " + response.json()['date'] + "\nType: " + response.json()['type'])
 
